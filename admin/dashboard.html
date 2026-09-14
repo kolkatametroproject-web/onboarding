@@ -1,1 +1,323 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard | MRPSP</title><link rel="stylesheet" href="../assets/css/admin.css"></head><body><aside><div class="admin-logo">MRPSP</div><nav><a class="active" href="#">Dashboard</a><a href="#">Candidates</a><a href="#">Batch Allocation</a><a href="#">Question Bank</a><a href="#">Exam Control</a><a href="#">Results</a><a href="#">Interviews</a></nav><button id="logout">Logout</button></aside><main class="admin-main"><header><div><small>CONTROL ROOM</small><h1>Onboarding Examination Dashboard</h1></div><span id="user"></span></header><section class="stats"><div><small>REGISTERED</small><b id="registered">0</b></div><div><small>ALLOCATED</small><b id="allocated">0</b></div><div><small>EXAM COMPLETED</small><b id="completed">0</b></div><div><small>INTERVIEW ELIGIBLE</small><b id="eligible">0</b></div></section><section class="panel"><h2>System Controls</h2><div class="control-grid"><div><b>Batch Allocation</b><p>Allocate registered candidates to dates and shifts.</p><button>Open Module</button></div><div><b>Question Bank</b><p>Upload and manage the examination question set.</p><button>Open Module</button></div><div><b>Exam Monitoring</b><p>Review live sessions and anti-cheat events.</p><button>Open Module</button></div></div></section></main><script type="module" src="../js/admin-dashboard.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MRPSP</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        .admin-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .admin-sidebar h3 {
+            color: white;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+        }
+
+        .admin-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .admin-sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: block;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .admin-content {
+            flex: 1;
+            margin-left: 250px;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            color: #dc3545;
+            font-size: 24px;
+        }
+
+        .admin-header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .logout-admin-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #dc3545;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            color: #dc3545;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-desc {
+            color: #999;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .content-area {
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 200px;
+            }
+            .admin-content {
+                margin-left: 200px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <h3>🔐 ADMIN</h3>
+            <ul>
+                <li><a href="dashboard.html" class="active">📊 Dashboard</a></li>
+                <li><a href="candidates.html">👥 Candidates</a></li>
+                <li><a href="batches.html">📅 Batches</a></li>
+                <li><a href="questions.html">❓ Questions</a></li>
+                <li><a href="exams.html">📝 Exams</a></li>
+                <li><a href="results.html">📈 Results</a></li>
+                <li><a href="interviews.html">🎤 Interviews</a></li>
+                <li><a href="settings.html">⚙️ Settings</a></li>
+            </ul>
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <button class="logout-admin-btn" style="width: 100%;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Header -->
+            <div class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div class="admin-header-actions">
+                    <span id="adminEmail" style="color: #666;"></span>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading dashboard...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent" style="display: none;">
+                <div class="content-area">
+                    <h2 class="page-title">Dashboard Overview</h2>
+
+                    <!-- Statistics Grid -->
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Candidates</div>
+                            <div class="stat-value" id="totalCandidates">0</div>
+                            <div class="stat-desc">Registered candidates</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Allocated Candidates</div>
+                            <div class="stat-value" id="allocatedCandidates">0</div>
+                            <div class="stat-desc">Batch allocated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Exam Completed</div>
+                            <div class="stat-value" id="examCompleted">0</div>
+                            <div class="stat-desc">Finished exams</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Batches</div>
+                            <div class="stat-value" id="totalBatches">0</div>
+                            <div class="stat-desc">Active batches</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div style="margin-top: 30px;">
+                        <h3>Quick Actions</h3>
+                        <div class="dashboard-grid">
+                            <a href="candidates.html" style="text-decoration: none;">
+                                <div style="background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; padding: 30px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">👥</div>
+                                    <div style="font-weight: 600;">Manage Candidates</div>
+                                </div>
+                            </a>
+                            <a href="batches.html" style="text-decoration: none;">
+                                <div style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); color: white; padding: 30px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">📅</div>
+                                    <div style="font-weight: 600;">Create Batches</div>
+                                </div>
+                            </a>
+                            <a href="questions.html" style="text-decoration: none;">
+                                <div style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); color: white; padding: 30px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">❓</div>
+                                    <div style="font-weight: 600;">Question Bank</div>
+                                </div>
+                            </a>
+                            <a href="results.html" style="text-decoration: none;">
+                                <div style="background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%); color: white; padding: 30px; border-radius: 8px; text-align: center;">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">📈</div>
+                                    <div style="font-weight: 600;">View Results</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getCurrentUser, logout as firebaseLogout } from '../js/auth.js';
+        import { getAllCandidates, getAllBatches } from '../js/database.js';
+        import { removeFromLocalStorage, redirect } from '../js/utils.js';
+
+        let currentUser = null;
+
+        // Load Dashboard
+        async function loadDashboard() {
+            try {
+                currentUser = await getCurrentUser();
+                if (!currentUser) {
+                    redirect('../login.html');
+                    return;
+                }
+
+                // Get admin session
+                const adminSession = JSON.parse(localStorage.getItem('adminSession') || '{}');
+                if (!adminSession.uid) {
+                    redirect('index.html');
+                    return;
+                }
+
+                document.getElementById('adminEmail').textContent = adminSession.email || 'Admin';
+
+                // Load statistics
+                const candidates = await getAllCandidates();
+                const batches = await getAllBatches();
+
+                const allocatedCount = candidates.filter(c => c.batch).length;
+                const completedCount = candidates.filter(c => c.status === 'completed').length;
+
+                // Update UI
+                document.getElementById('totalCandidates').textContent = candidates.length;
+                document.getElementById('allocatedCandidates').textContent = allocatedCount;
+                document.getElementById('examCompleted').textContent = completedCount;
+                document.getElementById('totalBatches').textContent = batches.length;
+
+                // Show dashboard
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Logout
+        window.logout = async function() {
+            try {
+                await firebaseLogout();
+                removeFromLocalStorage('adminSession');
+                redirect('index.html');
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        };
+
+        // Load on page load
+        loadDashboard();
+    </script>
+</body>
+</html>
