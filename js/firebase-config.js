@@ -8,7 +8,7 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-
 
 // Firebase Configuration for MRPSP Onboarding
 const firebaseConfig = {
-    apiKey: "AIzaSyBBzzzz_YOUR_API_KEY_HERE",
+    apiKey: "AIzaSyCbdhpjgasLWzxnpNrOWUVexhekS3iKYvg",
     authDomain: "onboarding-mrpsp.firebaseapp.com",
     databaseURL: "https://onboarding-mrpsp-default-rtdb.firebaseio.com",
     projectId: "onboarding-mrpsp",
