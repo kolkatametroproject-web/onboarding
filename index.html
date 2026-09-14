@@ -1,34 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MRPSP Onboarding Examination</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRPSP Onboarding Program</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            color: white;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><div class="rail-logo">MR</div><div><b>MRPSP</b><span>ONBOARDING EXAMINATION</span></div></div>
-  <div class="top-actions"><span>Helpdesk</span><span>English ▾</span></div>
-</header>
-<main class="landing">
-  <section class="hero">
-    <div class="eyebrow">METRO RAIL PROJECT SUPPORT PROGRAM</div>
-    <h1>Online Recruitment &amp; Onboarding Examination</h1>
-    <p>Secure computer-based examination portal for registered candidates.</p>
-    <div class="hero-actions">
-      <a class="btn primary" href="candidate/login.html">Candidate Login</a>
-      <a class="btn secondary" href="candidate/register.html">New Registration</a>
-      <a class="btn ghost" href="admin/login.html">Admin Portal</a>
+    <!-- Navigation -->
+    <nav>
+        <div class="container flex-between">
+            <div class="logo">MRPSP</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="admin/index.html">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <h1>MRPSP Onboarding Program</h1>
+            <p>Metropolitan Rapid Public Service Program - A comprehensive platform for candidate registration, examination, and selection</p>
+            <div style="margin-top: 30px;">
+                <a href="register.html" class="btn btn-lg" style="background-color: white; color: #1976d2; margin-right: 15px; font-weight: bold;">Get Started</a>
+                <a href="login.html" class="btn btn-lg" style="border: 2px solid white; color: white;">Login</a>
+            </div>
+        </div>
     </div>
-  </section>
-  <section class="cards">
-    <div class="info-card"><b>01</b><h3>Registration</h3><p>Register using your unique college enrollment number.</p></div>
-    <div class="info-card"><b>02</b><h3>Admit Card</h3><p>View your allocated examination date, shift and centre details.</p></div>
-    <div class="info-card"><b>03</b><h3>Computer Based Test</h3><p>Railway-style question palette, timer and navigation.</p></div>
-    <div class="info-card"><b>04</b><h3>Result &amp; Interview</h3><p>Check your score, eligibility and interview schedule.</p></div>
-  </section>
-</main>
-<footer>© MRPSP Project • Secure Examination Portal</footer>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 40px;">Program Features</h2>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Registration</h3>
+                <p>Easy and secure registration process for all candidates</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎫</div>
+                <h3>Admit Card</h3>
+                <p>Download your admit card with all exam details</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3>Examination</h3>
+                <p>Online examination with real-time monitoring and anti-cheat</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Results</h3>
+                <p>Instant results and performance analysis</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎤</div>
+                <h3>Interview</h3>
+                <p>Interview scheduling and management</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">👨‍💼</div>
+                <h3>Admin Dashboard</h3>
+                <p>Complete management and control panel</p>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="card" style="margin-top: 40px; margin-bottom: 40px;">
+            <h3>About MRPSP</h3>
+            <p>The Metropolitan Rapid Public Service Program is an initiative to recruit talented individuals for key positions. This comprehensive onboarding platform streamlines the entire recruitment process from registration through final selection.</p>
+            <h4 style="margin-top: 20px;">Key Stages:</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Registration:</strong> Candidates register with basic information</li>
+                <li><strong>Admit Card:</strong> Automated generation and download</li>
+                <li><strong>Examination:</strong> Online exam with proctoring</li>
+                <li><strong>Results:</strong> Instant evaluation and score publication</li>
+                <li><strong>Interview:</strong> Scheduled interviews for selected candidates</li>
+                <li><strong>Final Selection:</strong> Merit-based final selection</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MRPSP Onboarding Program. All rights reserved.</p>
+            <p>For support, contact: support@mrpsp.gov.in</p>
+        </div>
+    </footer>
 </body>
 </html>

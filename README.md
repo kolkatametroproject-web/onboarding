@@ -1,44 +1,100 @@
-# MRPSP Onboarding Examination Portal
+# MRPSP Onboarding Program
 
-A railway-style computer based examination portal designed for the MRPSP onboarding program.
+A comprehensive onboarding platform for MRPSP candidates with examination, admit card generation, interview scheduling, and admin dashboard.
 
-## Included
+## Features
 
-- Candidate registration with unique enrollment number
-- Firebase Realtime Database integration
-- Firebase Storage photo upload
-- Candidate dashboard
-- Admit-card view
-- CBT exam interface with question palette
-- Server-backed result storage
-- Tab-switch and fullscreen warning logging
-- Webcam permission gate
-- Admin authentication and dashboard
-- Firebase-ready architecture
+### Candidate Features
+- Registration & Authentication
+- Login & Dashboard
+- Admit Card Download
+- Examination Portal with Anti-Cheat
+- Webcam Verification
+- Results & Performance
+- Interview Schedule
 
-## GitHub Pages
+### Admin Features
+- Admin Dashboard
+- Candidate Management
+- Batch Allocation
+- Question Bank Management
+- Exam Management
+- Results Analysis
+- Interview Scheduling
 
-This is a static frontend and can be hosted from GitHub Pages.
+## Tech Stack
 
-1. Upload all files to your GitHub repository.
-2. Open Settings → Pages.
-3. Select Deploy from a branch.
-4. Select `main` and `/root`.
-5. Save.
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Hosting**: GitHub Pages
+- **Backend**: Firebase Realtime Database
+- **Authentication**: Firebase Authentication
+- **Storage**: Firebase Cloud Storage
 
-## Firebase setup
+## Firebase Configuration
 
-Enable:
-- Authentication
-- Realtime Database
-- Storage
+Project ID: `onboarding-mrpsp`
 
-Create an administrator account in Firebase Authentication.
+Database URL: `https://onboarding-mrpsp-default-rtdb.firebaseio.com`
 
-For production, replace the starter Realtime Database rules with restrictive rules tied to authenticated users and server-side validation. The included rules are a development starting point and should not be treated as production security.
+## Database Structure
 
-## Important production security
+```
+mrpsp/
+├── candidates/
+├── questions/
+├── exams/
+├── results/
+├── batches/
+├── interviews/
+└── settings/
+```
 
-The browser cannot be trusted for exam scoring, timer enforcement, identity decisions, or administrator authorization. For a real high-stakes exam, add a trusted backend or Firebase Cloud Functions to validate exam sessions, score submissions, enforce timing, protect the answer key, and manage privileged admin operations.
+## Getting Started
 
-The UI is inspired by formal railway/CBT examination portals but is not an official TCS iON or Indian Railways interface.
+1. Clone this repository
+2. Configure Firebase credentials in `js/firebase-config.js`
+3. Enable GitHub Pages in repository settings
+4. Access the site at `https://kolkatametroproject-web.github.io/onboarding/`
+
+## File Structure
+
+```
+├── index.html              → Home Page
+├── register.html           → Registration
+├── login.html              → Login
+├── dashboard.html          → Candidate Dashboard
+├── admit-card.html         → Admit Card
+├── exam.html               → Examination
+├── result.html             → Results
+├── interview.html          → Interview Schedule
+├── admin/
+│   ├── index.html          → Admin Login
+│   ├── dashboard.html      → Admin Dashboard
+│   ├── candidates.html     → Candidate Management
+│   ├── batches.html        → Batch Management
+│   ├── questions.html      → Question Bank
+│   ├── exams.html          → Exam Management
+│   ├── results.html        → Results
+│   └── interviews.html     → Interview Management
+├── js/
+│   ├── firebase-config.js  → Firebase Setup
+│   ├── auth.js             → Authentication Logic
+│   ├── database.js         → Database Operations
+│   └── utils.js            → Utility Functions
+├── css/
+│   ├── style.css           → Global Styles
+│   └── admin.css           → Admin Styles
+└── assets/
+    └── images/             → Icons & Images
+```
+
+## Security Notes
+
+- Firebase API Key is visible in client-side code but is NOT a secret
+- Security is enforced through Firebase Authentication and Database Rules
+- Production deployment should use Firebase Security Rules
+- Enable App Check for additional protection
+
+## License
+
+MRPSP Onboarding Program © 2026
