@@ -1,0 +1,4 @@
+import { db } from "./firebase-config.js"; import { ref,get } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+const n=sessionStorage.getItem("mrpspCandidate"); if(!n) location.href="login.html";
+const s=await get(ref(db,"candidates/"+n)); if(s.exists()){const c=s.val(); document.querySelector("#name").textContent=c.name;document.querySelector("#enroll").textContent=c.enrollmentNumber;document.querySelector("#examDate").textContent=c.examDate||"Not allocated";document.querySelector("#shift").textContent=c.examShift||"Not allocated";document.querySelector("#centre").textContent=c.examCentre||"To be announced";document.querySelector("#status").textContent=c.status||"Registered";}
+document.querySelector("#logout").onclick=()=>{sessionStorage.removeItem("mrpspCandidate");location.href="login.html"};

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Candidate Registration | MRPSP</title><link rel="stylesheet" href="../assets/css/portal.css"></head>
+<body><header class="portal-head"><a href="../index.html">MRPSP</a><span>Candidate Registration</span></header>
+<main class="form-wrap"><div class="form-card"><div class="section-title"><span>01</span><div><h1>Candidate Registration</h1><p>Create your official onboarding examination registration.</p></div></div>
+<form id="registerForm">
+<div class="grid"><label>College Enrollment Number*<input id="enrollment" required></label><label>Full Name*<input id="name" required></label><label>Email Address*<input id="email" type="email" required></label><label>Mobile Number*<input id="phone" required pattern="[0-9]{10}"></label><label>Date of Birth*<input id="dob" type="date" required></label><label>College / Institution*<input id="college" required></label></div>
+<div class="upload"><label>Registration Photograph*<input id="photo" type="file" accept="image/*" required></label><small>Use a clear recent photograph. JPG/PNG recommended.</small></div>
+<label class="check"><input type="checkbox" required> I confirm that the information provided is correct.</label>
+<button class="btn primary" type="submit">Submit Registration</button><div id="msg"></div>
+</form></div></main><script type="module" src="../js/register.js"></script></body></html>

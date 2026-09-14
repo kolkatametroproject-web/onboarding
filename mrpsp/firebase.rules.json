@@ -1,0 +1,11 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "candidates": {
+      "$id": {
+        ".write": "auth != null || (!data.exists() && newData.hasChildren(['enrollmentNumber','name','email','phone','dob','college']))"
+      }
+    }
+  }
+}
