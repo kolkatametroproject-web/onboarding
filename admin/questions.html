@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Bank - MRPSP Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .admin-sidebar h3 {
+            color: white;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+        }
+
+        .admin-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .admin-sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: block;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .admin-content {
+            flex: 1;
+            margin-left: 250px;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            color: #dc3545;
+            font-size: 24px;
+        }
+
+        .logout-admin-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .content-area {
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .upload-section h3 {
+            color: #dc3545;
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input[type="file"],
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .file-upload-area {
+            border: 2px dashed #dc3545;
+            border-radius: 4px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fff5f7;
+        }
+
+        .file-upload-area:hover {
+            background-color: #ffe0e6;
+            border-color: #bb2d3b;
+        }
+
+        .file-upload-area.dragover {
+            background-color: #ffe0e6;
+            border-color: #bb2d3b;
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .csv-format {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .csv-format h4 {
+            margin: 0 0 10px 0;
+            color: #dc3545;
+        }
+
+        .csv-format code {
+            background-color: white;
+            padding: 10px;
+            border-radius: 3px;
+            display: block;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-upload {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-upload:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-download {
+            background-color: #1976d2;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn-download:hover {
+            background-color: #0d47a1;
+        }
+
+        .questions-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filter-section select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .questions-list {
+            margin-top: 20px;
+        }
+
+        .question-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .question-number {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .option-item.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            font-weight: 600;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #bb2d3b;
+        }
+
+        .alert-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-message.show {
+            display: block;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #dc3545;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-questions {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 200px;
+            }
+            .admin-content {
+                margin-left: 200px;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .upload-buttons {
+                flex-direction: column;
+            }
+            .filter-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <h3>🔐 ADMIN</h3>
+            <ul>
+                <li><a href="dashboard.html">📊 Dashboard</a></li>
+                <li><a href="candidates.html">👥 Candidates</a></li>
+                <li><a href="batches.html">📅 Batches</a></li>
+                <li><a href="questions.html" class="active">❓ Questions</a></li>
+                <li><a href="exams.html">📝 Exams</a></li>
+                <li><a href="results.html">📈 Results</a></li>
+                <li><a href="interviews.html">🎤 Interviews</a></li>
+                <li><a href="settings.html">⚙️ Settings</a></li>
+            </ul>
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <button class="logout-admin-btn" style="width: 100%;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Header -->
+            <div class="admin-header">
+                <h1>Question Bank</h1>
+                <div>
+                    <span id="adminEmail" style="color: #666; margin-right: 20px;"></span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <h2 class="page-title">📚 Manage Questions</h2>
+
+                <!-- Alert Messages -->
+                <div class="alert-message alert-success" id="successAlert"></div>
+                <div class="alert-message alert-error" id="errorAlert"></div>
+
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <h3>📤 Upload Questions via CSV</h3>
+
+                    <!-- CSV Format Guide -->
+                    <div class="csv-format">
+                        <h4>📋 CSV Format:</h4>
+                        <code>sl no,question,option a,option b,option c,option d,answer</code>
+                        <p style="margin: 10px 0 0 0; color: #666;">
+                            <strong>Example:</strong><br>
+                            <code>1,What is 2+2?,3,4,5,6,4</code>
+                        </p>
+                    </div>
+
+                    <div class="upload-form">
+                        <div class="form-group">
+                            <label for="examSelect">Select Exam *</label>
+                            <select id="examSelect" required>
+                                <option value="">-- Select an exam --</option>
+                                <option value="exam001">General Aptitude Test</option>
+                                <option value="exam002">Technical Knowledge</option>
+                                <option value="exam003">Language Proficiency</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="categorySelect">Question Category *</label>
+                            <select id="categorySelect" required>
+                                <option value="">-- Select category --</option>
+                                <option value="general">General Knowledge</option>
+                                <option value="logical">Logical Reasoning</option>
+                                <option value="english">English</option>
+                                <option value="math">Mathematics</option>
+                                <option value="science">Science</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="csvFile">Choose CSV File *</label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="file-upload-icon">📁</div>
+                                <div class="file-upload-text">Click to select or drag and drop CSV file here</div>
+                                <div class="file-name" id="fileName"></div>
+                                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="upload-buttons">
+                            <button type="button" class="btn-upload" onclick="uploadQuestions()">✅ Upload Questions</button>
+                            <button type="button" class="btn-cancel" onclick="resetForm()">✖️ Cancel</button>
+                            <button type="button" class="btn-download" onclick="downloadTemplate()">⬇️ Download Template</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions List Section -->
+                <div class="questions-section">
+                    <h3 style="color: #dc3545; margin-top: 0;">📖 Questions List</h3>
+
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <select id="filterExam" onchange="filterQuestions()">
+                            <option value="">All Exams</option>
+                            <option value="exam001">General Aptitude Test</option>
+                            <option value="exam002">Technical Knowledge</option>
+                            <option value="exam003">Language Proficiency</option>
+                        </select>
+                        <select id="filterCategory" onchange="filterQuestions()">
+                            <option value="">All Categories</option>
+                            <option value="general">General Knowledge</option>
+                            <option value="logical">Logical Reasoning</option>
+                            <option value="english">English</option>
+                            <option value="math">Mathematics</option>
+                            <option value="science">Science</option>
+                        </select>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="loading" id="loadingState">
+                        <div class="spinner"></div>
+                        <p>Loading questions...</p>
+                    </div>
+
+                    <!-- Questions List -->
+                    <div class="questions-list" id="questionsList" style="display: none;">
+                        <!-- Questions will be populated here -->
+                    </div>
+
+                    <!-- No Questions State -->
+                    <div class="no-questions" id="noQuestionsState">
+                        No questions found. Upload questions to get started.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getCurrentUser, logout as firebaseLogout } from '../js/auth.js';
+        import { removeFromLocalStorage, redirect, showToast } from '../js/utils.js';
+        import { ref, set, get, remove } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+        import { db } from '../js/firebase-config.js';
+
+        let selectedFile = null;
+        let questionsData = [];
+
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const csvFile = document.getElementById('csvFile');
+
+        // File Upload Handler
+        fileUploadArea.addEventListener('click', () => csvFile.click());
+        csvFile.addEventListener('change', handleFileSelect);
+
+        // Drag and Drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                csvFile.files = files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            const file = csvFile.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.csv')) {
+                showAlert('Please select a CSV file', 'error');
+                csvFile.value = '';
+                return;
+            }
+
+            selectedFile = file;
+            document.getElementById('fileName').textContent = `✓ ${file.name}`;
+        }
+
+        // Upload Questions
+        window.uploadQuestions = async function() {
+            if (!selectedFile) {
+                showAlert('Please select a CSV file', 'error');
+                return;
+            }
+
+            const examId = document.getElementById('examSelect').value;
+            const category = document.getElementById('categorySelect').value;
+
+            if (!examId || !category) {
+                showAlert('Please select exam and category', 'error');
+                return;
+            }
+
+            try {
+                const text = await selectedFile.text();
+                const lines = text.split('\n').filter(line => line.trim());
+
+                if (lines.length < 2) {
+                    showAlert('CSV file is empty or has no data', 'error');
+                    return;
+                }
+
+                const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+                const errors = [];
+                let uploadCount = 0;
+
+                // Validate headers
+                const requiredHeaders = ['sl no', 'question', 'option a', 'option b', 'option c', 'option d', 'answer'];
+                for (const header of requiredHeaders) {
+                    if (!headers.includes(header)) {
+                        showAlert(`Missing column: ${header}`, 'error');
+                        return;
+                    }
+                }
+
+                // Parse and validate data
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].split(',').map(v => v.trim());
+                    
+                    if (line.length < 7) continue;
+
+                    const slNo = line[0];
+                    const question = line[1];
+                    const optionA = line[2];
+                    const optionB = line[3];
+                    const optionC = line[4];
+                    const optionD = line[5];
+                    const answer = line[6].toUpperCase();
+
+                    // Validate answer
+                    if (!['A', 'B', 'C', 'D'].includes(answer)) {
+                        errors.push(`Row ${i + 1}: Answer must be A, B, C, or D`);
+                        continue;
+                    }
+
+                    // Validate question and options
+                    if (!question || !optionA || !optionB || !optionC || !optionD) {
+                        errors.push(`Row ${i + 1}: Missing question or options`);
+                        continue;
+                    }
+
+                    try {
+                        const questionId = `Q${examId}${Date.now()}${i}`;
+                        await set(ref(db, `questions/${questionId}`), {
+                            questionId: questionId,
+                            examId: examId,
+                            category: category,
+                            serialNumber: slNo,
+                            questionText: question,
+                            options: {
+                                a: optionA,
+                                b: optionB,
+                                c: optionC,
+                                d: optionD
+                            },
+                            correctAnswer: answer,
+                            createdAt: new Date().toISOString()
+                        });
+                        uploadCount++;
+                    } catch (error) {
+                        errors.push(`Row ${i + 1}: ${error.message}`);
+                    }
+                }
+
+                // Show results
+                if (uploadCount > 0) {
+                    showAlert(`✅ Successfully uploaded ${uploadCount} questions!`, 'success');
+                    resetForm();
+                    loadQuestions();
+                }
+
+                if (errors.length > 0) {
+                    showAlert(`⚠️ ${errors.length} rows had errors:\n${errors.join('\n')}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Error processing file: ${error.message}`, 'error');
+            }
+        };
+
+        // Load Questions
+        async function loadQuestions() {
+            try {
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('questionsList').style.display = 'none';
+                document.getElementById('noQuestionsState').style.display = 'none';
+
+                const snapshot = await get(ref(db, 'questions'));
+                questionsData = [];
+
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        questionsData.push({
+                            id: child.key,
+                            ...child.val()
+                        });
+                    });
+                }
+
+                document.getElementById('loadingState').style.display = 'none';
+                
+                if (questionsData.length === 0) {
+                    document.getElementById('noQuestionsState').style.display = 'block';
+                } else {
+                    displayQuestions(questionsData);
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                showAlert('Error loading questions', 'error');
+            }
+        }
+
+        // Display Questions
+        function displayQuestions(questions) {
+            const listDiv = document.getElementById('questionsList');
+            listDiv.innerHTML = '';
+            listDiv.style.display = 'block';
+
+            questions.forEach((q) => {
+                const optionLetters = ['a', 'b', 'c', 'd'];
+                let optionsHTML = '';
+
+                optionLetters.forEach(letter => {
+                    const isCorrect = q.correctAnswer.toLowerCase() === letter;
+                    const optionsClass = isCorrect ? 'option-item correct' : 'option-item';
+                    optionsHTML += `
+                        <div class="${optionsClass}">
+                            <strong>${letter.toUpperCase()})</strong> ${q.options[letter]}
+                        </div>
+                    `;
+                });
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="question-number">Q${q.serialNumber} | Exam: ${q.examId} | Category: ${q.category}</div>
+                    <div class="question-text">${q.questionText}</div>
+                    <div class="options-grid">
+                        ${optionsHTML}
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn-small btn-delete" onclick="deleteQuestion('${q.id}')">Delete</button>
+                    </div>
+                `;
+                listDiv.appendChild(card);
+            });
+        }
+
+        // Filter Questions
+        window.filterQuestions = function() {
+            const examFilter = document.getElementById('filterExam').value;
+            const categoryFilter = document.getElementById('filterCategory').value;
+
+            let filtered = questionsData;
+
+            if (examFilter) {
+                filtered = filtered.filter(q => q.examId === examFilter);
+            }
+            if (categoryFilter) {
+                filtered = filtered.filter(q => q.category === categoryFilter);
+            }
+
+            if (filtered.length === 0) {
+                document.getElementById('questionsList').style.display = 'none';
+                document.getElementById('noQuestionsState').style.display = 'block';
+            } else {
+                displayQuestions(filtered);
+            }
+        };
+
+        // Delete Question
+        window.deleteQuestion = async function(questionId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                try {
+                    await remove(ref(db, `questions/${questionId}`));
+                    showAlert('Question deleted successfully', 'success');
+                    loadQuestions();
+                } catch (error) {
+                    showAlert('Error deleting question', 'error');
+                }
+            }
+        };
+
+        // Reset Form
+        window.resetForm = function() {
+            selectedFile = null;
+            csvFile.value = '';
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('examSelect').value = '';
+            document.getElementById('categorySelect').value = '';
+        };
+
+        // Download Template
+        window.downloadTemplate = function() {
+            const template = `sl no,question,option a,option b,option c,option d,answer
+1,What is the capital of India?,Mumbai,Delhi,Bangalore,Hyderabad,b
+2,What is 5 + 3?,6,8,10,12,b
+3,Who is the President of India?,PM Name,President Name,Speaker,Chief Justice,b`;
+            
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(template));
+            element.setAttribute('download', 'questions_template.csv');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        };
+
+        // Show Alert
+        function showAlert(message, type) {
+            const alert = type === 'success' ? document.getElementById('successAlert') : document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+
+        // Logout
+        window.logout = async function() {
+            try {
+                await firebaseLogout();
+                removeFromLocalStorage('adminSession');
+                redirect('index.html');
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        };
+
+        // Initialize
+        async function init() {
+            const currentUser = await getCurrentUser();
+            if (!currentUser) {
+                redirect('../login.html');
+                return;
+            }
+
+            const adminSession = JSON.parse(localStorage.getItem('adminSession') || '{}');
+            if (!adminSession.uid) {
+                redirect('index.html');
+                return;
+            }
+
+            document.getElementById('adminEmail').textContent = adminSession.email || 'Admin';
+            loadQuestions();
+        }
+
+        init();
+    </script>
+</body>
+</html>
