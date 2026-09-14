@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRPSP Onboarding Program</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; text-align: center; }
+        .nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        button { padding: 10px 20px; border: none; border-radius: 5px; background: #0056b3; color: white; cursor: pointer; font-size: 16px; }
+        button:hover { background: #004494; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .warning { color: red; font-weight: bold; }
+        
+        /* Exam Specific */
+        #exam-container { border: 2px solid #0056b3; padding: 20px; border-radius: 5px; margin-top: 20px;}
+        .camera-box { width: 100%; height: 200px; background: #ddd; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-radius: 5px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>MRPSP Onboarding</h1>
+    
+    <!-- Navigation to simulate different pages -->
+    <div class="nav">
+        <button onclick="showSection('register-section')">Student Registration</button>
+        <button onclick="showSection('admin-section')">Admin Dashboard</button>
+        <button onclick="showSection('exam-section')">Start Exam</button>
+    </div>
+
+    <!-- 1. REGISTRATION SECTION -->
+    <div id="register-section" class="section active">
+        <h2>New Candidate Registration</h2>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label>College Enrollment Number (Unique ID)</label>
+            <input type="text" id="reg-enrollment" placeholder="e.g., COL-2026-1024">
+        </div>
+        <button id="btn-register">Register & Generate ID</button>
+        <p id="reg-message"></p>
+    </div>
+
+    <!-- 2. ADMIN SECTION -->
+    <div id="admin-section" class="section">
+        <h2>Admin Controls</h2>
+        <p>Allocate batches, set exam dates, and upload question banks.</p>
+        <div class="form-group">
+            <label>Set Exam Date for Batch</label>
+            <input type="date" id="exam-date" style="padding: 8px;">
+        </div>
+        <button id="btn-generate-admit">Shuffle Candidates & Generate Admit Cards</button>
+        <p id="admin-message"></p>
+    </div>
+
+    <!-- 3. EXAM SECTION -->
+    <div id="exam-section" class="section">
+        <h2>Exam Portal</h2>
+        <p class="warning">Warning: Do not switch tabs. Tab switching will be logged and may result in disqualification.</p>
+        
+        <div class="form-group">
+            <label>Enter Registration Number to Start</label>
+            <input type="text" id="exam-login-id">
+        </div>
+        
+        <div class="camera-box" id="camera-placeholder">
+            [Biometric Camera Feed Placeholder]
+        </div>
+
+        <button id="btn-start-exam">Verify Face & Enter Fullscreen</button>
+
+        <div id="exam-container" style="display: none;">
+            <h3>Question 1:</h3>
+            <p>What is the main purpose of the MRPSP Onboarding Program?</p>
+            <input type="radio" name="q1" value="A"> A) Recruitment<br>
+            <input type="radio" name="q1" value="B"> B) Training<br><br>
+            <button id="btn-submit-exam">Submit Exam</button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK Module -->
+<script type="module">
+    // 1. Initialize Firebase App and Database
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCbdhpjgasLWzxnpNrOWUVexhekS3iKYvg",
+        authDomain: "onboarding-mrpsp.firebaseapp.com",
+        databaseURL: "https://onboarding-mrpsp-default-rtdb.firebaseio.com",
+        projectId: "onboarding-mrpsp",
+        storageBucket: "onboarding-mrpsp.firebasestorage.app",
+        messagingSenderId: "81624365626",
+        appId: "1:81624365626:web:e3de822baeb7c339e19303"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // --- REGISTRATION LOGIC ---
+    document.getElementById('btn-register').addEventListener('click', async () => {
+        const name = document.getElementById('reg-name').value.trim();
+        const enrollment = document.getElementById('reg-enrollment').value.trim();
+        const msgEl = document.getElementById('reg-message');
+
+        if (!name || !enrollment) {
+            msgEl.style.color = "red";
+            msgEl.textContent = "Please fill all fields.";
+            return;
+        }
+
+        const dbRef = ref(db);
+        try {
+            // Check if enrollment number already exists (One form per enrollment)
+            const snapshot = await get(child(dbRef, `candidates/${enrollment}`));
+            if (snapshot.exists()) {
+                msgEl.style.color = "red";
+                msgEl.textContent = "Error: This Enrollment Number is already registered.";
+            } else {
+                // Save new user
+                await set(ref(db, `candidates/${enrollment}`), {
+                    fullName: name,
+                    registrationNumber: enrollment, // Enrollment becomes Reg No.
+                    status: 'Registered',
+                    registeredAt: new Date().toISOString()
+                });
+                msgEl.style.color = "green";
+                msgEl.textContent = `Success! Your Registration Number is: ${enrollment}`;
+            }
+        } catch (error) {
+            console.error("Firebase Error:", error);
+            msgEl.textContent = "Database error occurred.";
+        }
+    });
+
+    // --- ADMIN LOGIC (Placeholder) ---
+    document.getElementById('btn-generate-admit').addEventListener('click', () => {
+        const date = document.getElementById('exam-date').value;
+        if(date) {
+            document.getElementById('admin-message').textContent = `Admit cards successfully generated and shuffled for ${date}.`;
+            document.getElementById('admin-message').style.color = "green";
+        } else {
+            alert("Please select a date first.");
+        }
+    });
+
+    // --- EXAM LOGIC & ANTI-CHEAT ---
+    let isExamActive = false;
+    let cheatWarnings = 0;
+
+    document.getElementById('btn-start-exam').addEventListener('click', () => {
+        const regId = document.getElementById('exam-login-id').value;
+        if(!regId) return alert("Enter Registration Number.");
+        
+        // 1. Enter Fullscreen (Anti-cheat)
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.log("Fullscreen failed:", err);
+            });
+        }
+        
+        // 2. Start Exam
+        isExamActive = true;
+        document.getElementById('btn-start-exam').style.display = 'none';
+        document.getElementById('exam-container').style.display = 'block';
+        document.getElementById('camera-placeholder').textContent = "[Camera Recording Active - Face Matched]";
+        document.getElementById('camera-placeholder').style.background = "#d4edda";
+    });
+
+    // Tab Switching Detection (Visibility API)
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && isExamActive) {
+            cheatWarnings++;
+            alert(`WARNING: You have switched tabs! (Warning ${cheatWarnings}/3)`);
+            if(cheatWarnings >= 3) {
+                alert("Exam Auto-Submitted due to multiple violations.");
+                endExam();
+            }
+        }
+    });
+
+    document.getElementById('btn-submit-exam').addEventListener('click', () => {
+        alert("Exam submitted successfully. Marks will be generated.");
+        endExam();
+    });
+
+    function endExam() {
+        isExamActive = false;
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        document.getElementById('exam-container').innerHTML = "<h3>Exam Concluded.</h3>";
+    }
+
+</script>
+
+<script>
+    // Simple UI Navigation (Outside module scope to allow inline onclick handlers)
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
